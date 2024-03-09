@@ -1,3 +1,6 @@
+###Let's assume that we have thousands of tests in our codebase that we have written over time and measured how long each test takes. Find the best allocation to run on the n number of machines.
+###Other considerations included - [execution time limit] 4 seconds, [memory limit] 1GB
+
 from queue import Queue, PriorityQueue
 def reverseQueue(q,revq):
     buff=q.get()
