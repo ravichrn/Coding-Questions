@@ -1,0 +1,47 @@
+#given text data with listed_prices containing nightly prices for each market per hotel, calculate the median nightly price for each market
+#schema -  hotel_id, market, nightly_price
+#assume odd number of records for each market, to avoid calculating median for even number of records
+
+sample_data = """
+1,NYC,150
+2,NYC,200
+3,NYC,175
+4,LA,30
+5,LA,40
+6,LA,150
+7,SF,300
+8,SF,250
+9,SF,280"""
+
+#python
+def calculate_medain(data):
+    #split and load to dictionary
+    dict = {}
+    lines = data.strip().split('\n')
+    for line in lines:
+        parts = line.strip().split(',')
+        if parts[1] in dict:
+            dict[parts[1]].append(int(parts[2]))
+        else:
+            dict[parts[1]] = [int(parts[2])]
+   
+    #calculate median
+    res = {}
+    for ind, val in dict.items():
+        if val:
+            val.sort()
+            n = len(val)
+            median_ind = n//2
+            res[ind] =  val[median_ind]
+    return res
+
+#sql
+with ranked_prices as (
+    select market, nightly_price,
+    row_number() over (partition by market order by nightly_price) as rownum,
+    count(*) over (partition by market) as total_count
+    from listing_prices
+)
+select market, nightly_price as median_nightly_price
+from ranked_prices
+where rownum = (total_count + 1) / 2

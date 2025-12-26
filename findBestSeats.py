@@ -2,7 +2,6 @@ def findBestSeats(seats):
     prev_seat=0
     max_dist=0
     max_index=0
-    next_seat=0
     num=0
     for index, val in enumerate(seats):
         if val:
